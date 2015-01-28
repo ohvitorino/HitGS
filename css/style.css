@@ -1,0 +1,68 @@
+* {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#map {
+	height: 350px;
+	width: 400px;
+	margin-left: 30px;
+	margin-top: 10px;
+	display: block;
+	float: left;
+}
+
+label {
+	display: block;
+	float: left;
+	clear: both;
+	width: 150px;
+	margin: 10px 30px 0 5px;
+	text-align: right;
+}
+
+.options {
+	clear: both;
+	width: 75%;
+}
+
+.options > input[type=text], .options > textarea, .options > select, .options > div {
+	display: block;
+	float: left;
+	margin-top: 10px;
+	width: 350px;
+}
+
+.options > div {
+	width: 450px;
+}
+
+.options > input[type=button] {
+	clear: both;
+	display: block;
+	float: left;
+	margin: 30px 0 30px 185px;
+}
+
+#radioGroup > input[type=text] {
+	clear: both;
+	float: left;
+	display: block;
+}
+
+.results {
+	clear: both;
+}
+
+.results > textarea {
+	display: block;
+	float: left;
+	margin-top: 10px;
+	height: 350px;
+	width: 450px;
+}
+
+.error {
+	color: red;
+	display: block;
+	float: left;
+}

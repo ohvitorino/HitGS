@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<title>WFS & WMS testing</title>
+	<script type="text/javascript" charset="utf-8" src="assetic/jquery.js"></script>
+	<script type="text/javascript" charset="utf-8" src="//openlayers.org/en/v3.1.1/build/ol-debug.js"></script>
+
+	<link rel="stylesheet" href="//openlayers.org/en/v3.1.1/css/ol.css" type="text/css"/>
+</head>
+<body>
+
+
+<form action="#" method="get">
+	<div class="options">
+		<label for="txtServer">Server:</label>&nbsp;<input type="text" id="txtServer"/>
+		<label for="txtLayerName">Layer:</label><input type="text" id="txtLayerName"/><span id="lblErrorLayerName"
+		                                                                                    class="error"></span>
+		<label for="ddlRequestType">Request Type:</label>&nbsp;
+		<select name="ddlRequestType" id="ddlRequestType">
+			<option value="WMS">WMS</option>
+			<option value="WFS">WFS</option>
+		</select>
+
+		<label for="radioGroup">Operation:</label>
+
+		<div id="radioGroup">
+			<input type="radio" name="request" value="GetCapabilities"/>GetCapabilities
+			<input type="radio" name="request" value="GetFeature"/>GetFeature
+			<input type="radio" name="request" value="GetFeatureInfo"/>GetFeatureInfo
+		</div>
+
+		<label for="txtCQL">CQL:</label>&nbsp;<textarea name="txtCQL" id="txtCQL" cols="30" rows="5"></textarea>
+		<label for="ddlOutputFormat">Output Format:</label>&nbsp;
+		<select name="ddlOutputFormat" id="ddlOutputFormat">
+			<option value="json">JSON</option>
+			<option value="xml">XML</option>
+		</select>
+
+		<label for="txtRequest">Request Format:</label><input type="text" id="txtRequest"/>
+
+		<input type="button" id="btnSubmit" value="Submit to Server"/>
+	</div>
+	<div class="results">
+		<label for="txtResult">Result:</label><textarea name="txtResult" id="txtResult" cols="60" rows="10"></textarea>
+
+		<div id="map"></div>
+	</div>
+
+</form>
+
+
+<script type="text/javascript" src="js/core.js"></script>
+
+</body>
+</html>
