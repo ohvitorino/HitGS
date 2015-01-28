@@ -75,12 +75,10 @@ $(function () {
 			url: txtRequest.val(),
 
 			type: 'GET',
-//				dataType: 'application/json; charset=utf-8',
-			dataType: 'jsonp',
+			dataType: 'text/javascript',
 			processData: false,
 			contentType: 'text/javascript',
 
-			jsonpCallback: 'getJson',
 			async: false,
 
 			success: function (data) {
