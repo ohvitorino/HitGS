@@ -4,8 +4,7 @@
 
 #map {
 	height: 350px;
-	width: 400px;
 	display: block;
 	float: left;
-	border: 2px solid #000000;
+	border: 1px solid #ddd;
 }

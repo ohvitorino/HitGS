@@ -5,14 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>WFS & WMS testing</title>
 
-	<link href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/ol.css" type="text/css"/>
-	<script type="text/javascript" charset="utf-8" src="js/ol-debug.js"></script>
+	<!--<link href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">-->
+	<!--<link href="vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+	<!--<link rel="stylesheet" href="css/ol.css" type="text/css"/>-->
+	<!--<script type="text/javascript" charset="utf-8" src="js/ol-debug.js"></script>-->
 
-	<!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">-->
-	<!--<link rel="stylesheet" href="//openlayers.org/en/v3.1.1/css/ol.css" type="text/css"/>-->
-	<!--<script type="text/javascript" charset="utf-8" src="//openlayers.org/en/v3.1.1/build/ol-debug.js"></script>-->
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="//openlayers.org/en/v3.1.1/css/ol.css" type="text/css"/>
+	<script type="text/javascript" charset="utf-8" src="//openlayers.org/en/v3.1.1/build/ol-debug.js"></script>
 
 	<link rel="stylesheet" href="css/style.css" type="text/css"/>
 </head>
@@ -42,7 +42,7 @@
 		<div class="form-group">
 			<label for="txtServer" class="col-sm-1 control-label">Server:</label>
 
-			<div class="col-sm-9">
+			<div class="col-sm-6">
 				<input type="text" class="form-control" id="txtServer"/>
 			</div>
 		</div>
@@ -50,7 +50,7 @@
 		<div class="form-group">
 			<label for="txtLayerName" class="col-sm-1 control-label">Layer:</label>
 
-			<div class="col-sm-9">
+			<div class="col-sm-6">
 				<input type="text" id="txtLayerName" class="form-control"/><span id="lblErrorLayerName"
 				                                                                 class="error"></span>
 			</div>
@@ -59,7 +59,7 @@
 		<div class="form-group">
 			<label for="ddlRequestType" class="col-sm-1 control-label">Request Type:</label>
 
-			<div class="col-sm-9">
+			<div class="col-sm-6">
 				<select name="ddlRequestType" id="ddlRequestType" class="form-control">
 					<option value="WMS">WMS</option>
 					<option value="WFS">WFS</option>
@@ -70,7 +70,7 @@
 		<div class="form-group">
 			<label for="radioGroup" class="col-sm-1 control-label">Operation:</label>
 
-			<div class="col-sm-9">
+			<div class="col-sm-6">
 				<div id="radioGroup" class="form-control">
 					<input type="radio" name="request" value="GetCapabilities"/>GetCapabilities
 					<input type="radio" name="request" value="GetFeature"/>GetFeature
@@ -82,7 +82,7 @@
 		<div class="form-group">
 			<label for="txtCQL" class="col-sm-1 control-label">CQL:</label>
 
-			<div class="col-md-9">
+			<div class="col-sm-6">
 				<textarea name="txtCQL" id="txtCQL" cols="30" rows="5" class="form-control"></textarea>
 			</div>
 		</div>
@@ -90,7 +90,7 @@
 		<div class="form-group">
 			<label for="ddlOutputFormat" class="col-sm-1 control-label">Output Format:</label>
 
-			<div class="col-md-9">
+			<div class="col-sm-6">
 				<select name="ddlOutputFormat" id="ddlOutputFormat" class="form-control">
 					<option value="json">JSON</option>
 					<option value="xml">XML</option>
@@ -101,7 +101,7 @@
 		<div class="form-group">
 			<label for="txtRequest" class="col-sm-1 control-label">Request Format:</label>
 
-			<div class="col-md-9">
+			<div class="col-sm-6">
 				<input type="text" id="txtRequest" class="form-control"/>
 			</div>
 		</div>
@@ -129,19 +129,19 @@
 	<form action="#" role="form" class="form-horizontal">
 		<div class="form-group">
 			<label for="map" class="col-sm-1 control-label">Openlayers:</label>
-			<div class="col-md-11">
+			<div class="col-md-9">
 				<div id="map" class="form-control"></div>
 			</div>
 		</div>
 	</form>
 
 
-	<script src="vendor/components/jquery/jquery.min.js"></script>
-	<script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!--<script src="vendor/components/jquery/jquery.min.js"></script>-->
+	<!--<script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>-->
 
 
-	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
-	<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="js/core.js"></script>
 

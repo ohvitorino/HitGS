@@ -2,7 +2,7 @@
  * Created by brunop on 1/28/2015.
  */
 
-$(function (ol) {
+$(function () {
 	"use strict";
 
 	// DOM Elements
@@ -17,7 +17,7 @@ $(function (ol) {
 	var txtCQL              = $('#txtCQL');
 	var txtResult           = $('#txtResult');
 
-	if(ol === 'undefined') {
+	if(ol !== 'undefined') {
 		var map = new ol.Map({
 			target: 'map',
 			layers: [
@@ -27,7 +27,7 @@ $(function (ol) {
 			],
 			view: new ol.View({
 				center: ol.proj.transform([3.4963456, 51.4455533], 'EPSG:4326', 'EPSG:3857'),
-				zoom: 8
+				zoom: 2
 			})
 		});
 	}
