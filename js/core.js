@@ -2,7 +2,7 @@
  * Created by brunop on 1/28/2015.
  */
 
-$(function () {
+$(function (ol) {
 	"use strict";
 
 	// DOM Elements
@@ -17,18 +17,20 @@ $(function () {
 	var txtCQL              = $('#txtCQL');
 	var txtResult           = $('#txtResult');
 
-	var map = new ol.Map({
-		target: 'map',
-		layers: [
-			new ol.layer.Tile({
-				source: new ol.source.OSM()
+	if(ol === 'undefined') {
+		var map = new ol.Map({
+			target: 'map',
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.OSM()
+				})
+			],
+			view: new ol.View({
+				center: ol.proj.transform([3.4963456, 51.4455533], 'EPSG:4326', 'EPSG:3857'),
+				zoom: 8
 			})
-		],
-		view: new ol.View({
-			center: ol.proj.transform([3.4963456, 51.4455533], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 8
-		})
-	});
+		});
+	}
 
 	// Vars
 

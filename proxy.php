@@ -9,23 +9,21 @@
 
 if ($_GET['url']) {
 	$url = rawurldecode($_GET['url']);
-}
-else {
+} else {
 	$url = "http://geo.vliz.be/geoserver/wms?" . urldecode($_SERVER['QUERY_STRING']);
 }
 
 $parts = parse_url($url);
 
 if (count($parts) < 2) {
-	header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-}
-else {
+	header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+} else {
 //access checks
 	$ref = $_SERVER['HTTP_REFERER'];
 	if (false === strpos($_SERVER['HTTP_USER_AGENT'], "MSIE 7")
 			and false === strpos($_SERVER['HTTP_USER_AGENT'], "MSIE 8")
 	) {
-		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+		header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 	}
 
 
