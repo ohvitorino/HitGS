@@ -1,0 +1,31 @@
+{
+  "name": "HitGS",
+  "version": "0.1",
+  "homepage": "https://github.com/ohvitorino/HitGS",
+  "authors": [
+    "bruno.vitorino@gmail.com"
+  ],
+  "description": "Web application intended to test WFS and WMS services on GeoServer",
+  "main": "hit.html",
+  "keywords": [
+    "geoserver",
+    "wms",
+    "wfs",
+    "gis"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "openlayers": "*",
+    "highlight": "~7.0.1",
+    "bootstrap": "~3.3.2",
+    "jquery": "~2.1.3"
+  }
+}

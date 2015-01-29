@@ -49,3 +49,4 @@ crashlytics-build.properties
 
 
 vendor/
+bower_components/
