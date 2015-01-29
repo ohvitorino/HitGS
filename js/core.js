@@ -16,6 +16,7 @@ $(function () {
 	var txtRequest          = $('#txtRequest');
 	var txtCQL              = $('#txtCQL');
 	var txtResult           = $('#txtResult');
+	var txtMaxFeatures      = $('#txtMaxFeatures');
 
 	if(ol !== 'undefined') {
 		var map = new ol.Map({
@@ -51,17 +52,22 @@ $(function () {
 		url = prepareURL(url) + 'rest/workspaces.json';
 
 		$.ajax({
-			url: url,
+			url: 'proxy.php',
+
+			data: {
+				url: url
+			},
+
 			type: 'GET',
-			dataType: 'application/json; charset=utf-8',
-			processData: false,
+			dataType: 'json',
+
 			contentType: 'application/json',
+
 			success: function(data) {
-				alert(data);
+				console.log(data);
 			},
 			error: function(xhr, ajaxOptions, throwError) {
-				alert(xhr.status);
-				alert(xhr.responseText);
+				console.error(xhr);
 			}
 		});
 	};
@@ -72,23 +78,29 @@ $(function () {
 	};
 
 	var submitRequest = function () {
-
+		txtResult.html('');
 		$.ajax({
-			url: txtRequest.val(),
+			url: 'proxy.php',
+
+			data: {
+				url: txtRequest.val()
+			},
 
 			type: 'GET',
-			dataType: 'text/javascript',
-			processData: false,
-			contentType: 'text/javascript',
+			//dataType: 'application/javascript',
+			dataType: 'json',
+			//processData: false,
+			//contentType: 'application/javascript',
 
-			async: false,
+			async: true,
 
 			success: function (data) {
-				console.log(data);
-				txtResult.val(JSON.stringify(data));
+				updateResultBox(data);
+
+				updateCodeHighlight();
 			},
 			error: function (xhr, ajax, throwError) {
-				txtResult.val(xhr.status + ' : ' + xhr.responseText);
+				txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText  + '</pre>');
 				console.log(xhr);
 				console.log(ajax);
 			}
@@ -112,10 +124,12 @@ $(function () {
 		var reqType = ddlRequestType.val();
 		var operation = $('input[name=request]:checked').val();
 		var outputFormat = ddlOutputFormat.val();
+		var maxFeatures = txtMaxFeatures.val();
 
 		// Fix output format for request
 		if(outputFormat == "json") {
-			outputFormat = "&outputFormat=text/javascript&format_options=callback:getJson";
+			//outputFormat = "&outputFormat=text/javascript&format_options=callback:getJson";
+			outputFormat = "&outputFormat=application/json";
 		} else {
 			outputFormat = "";
 		}
@@ -133,11 +147,25 @@ $(function () {
 				url = prepareURL(serverURL) + layer[0]
 				+ '/ows?service=WFS&version=1.0.0&request='
 				+ operation + '&typeName=' + layerName
-				+ outputFormat;
+				+ '&maxFeatures=' + maxFeatures + outputFormat;
 		}
 
 		txtRequest.val(url);
 	};
+
+	var updateCodeHighlight = function() {
+		$('pre code').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
+	};
+
+	var updateResultBox = function(data) {
+		var pre = $("<pre>");
+		var code = $("<code>", {class: 'json'});
+		code.appendTo(pre);
+		pre.appendTo(txtResult);
+		code.html(JSON.stringify(data, undefined, 2));
+	}
 
 
 	// Bind events
@@ -149,9 +177,13 @@ $(function () {
 
 	txtServerURL.on('change', generateRequestURL);
 	txtLayerName.on('change', generateRequestURL);
-	ddlRequestType.on('change', generateRequestURL);
-	$('input[name=request]').on('change', generateRequestURL);
+	txtMaxFeatures.on('change', generateRequestURL);
 	txtCQL.on('change', generateRequestURL);
+	ddlRequestType.on('change', generateRequestURL);
 	ddlOutputFormat.on('change', generateRequestURL);
+	$('input[name=request]').on('change', generateRequestURL);
+
+	generateRequestURL();
+	txtResult.html('');
 
 });

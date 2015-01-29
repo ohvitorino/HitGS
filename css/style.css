@@ -8,3 +8,11 @@
 	float: left;
 	border: 1px solid #ddd;
 }
+
+#txtResult {
+	overflow-y: scroll;
+	height: 300px;
+	border: 1px solid #ddd;
+	font-family: "Courier New", monospace;
+	white-space: pre;
+}
