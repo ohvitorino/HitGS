@@ -7,18 +7,18 @@ $(function () {
 
 	// DOM Elements
 
-	var btnSubmit           = $('#btnSubmit');
-	var txtLayerName        = $('#txtLayerName');
-	var txtServerURL        = $('#txtServer');
-	var lblErrorLayerName   = $('#lblErrorLayerName');
-	var ddlRequestType      = $('#ddlRequestType');
-	var ddlOutputFormat     = $('#ddlOutputFormat');
-	var txtRequest          = $('#txtRequest');
-	var txtCQL              = $('#txtCQL');
-	var txtResult           = $('#txtResult');
-	var txtMaxFeatures      = $('#txtMaxFeatures');
+	var btnSubmit = $('#btnSubmit');
+	var txtLayerName = $('#txtLayerName');
+	var txtServerURL = $('#txtServer');
+	var lblErrorLayerName = $('#lblErrorLayerName');
+	var ddlRequestType = $('#ddlRequestType');
+	var ddlOutputFormat = $('#ddlOutputFormat');
+	var txtRequest = $('#txtRequest');
+	var txtCQL = $('#txtCQL');
+	var txtResult = $('#txtResult');
+	var txtMaxFeatures = $('#txtMaxFeatures');
 
-	if(ol !== 'undefined') {
+	if (ol !== 'undefined') {
 		var map = new ol.Map({
 			target: 'map',
 			layers: [
@@ -39,7 +39,7 @@ $(function () {
 
 	// Methods
 
-	var prepareURL = function (url) {
+	var prepareServerURL = function (url) {
 		if (url.indexOf('/', url.length - 1) == -1) {
 			url += '/';
 		}
@@ -49,7 +49,7 @@ $(function () {
 	var requestServerInformation = function () {
 		var url = txtServerURL.val();
 
-		url = prepareURL(url) + 'rest/workspaces.json';
+		url = prepareServerURL(url) + 'rest/workspaces.json';
 
 		$.ajax({
 			url: 'proxy.php',
@@ -63,10 +63,10 @@ $(function () {
 
 			contentType: 'application/json',
 
-			success: function(data) {
+			success: function (data) {
 				console.log(data);
 			},
-			error: function(xhr, ajaxOptions, throwError) {
+			error: function (xhr, ajaxOptions, throwError) {
 				console.error(xhr);
 			}
 		});
@@ -77,40 +77,10 @@ $(function () {
 		counter = setTimeout(requestServerInformation, 2000);
 	};
 
-	var submitRequest = function () {
-		txtResult.html('');
-		$.ajax({
-			url: 'proxy.php',
-
-			data: {
-				url: txtRequest.val()
-			},
-
-			type: 'GET',
-			//dataType: 'application/javascript',
-			dataType: 'json',
-			//processData: false,
-			//contentType: 'application/javascript',
-
-			async: true,
-
-			success: function (data) {
-				updateResultBox(data);
-
-				updateCodeHighlight();
-			},
-			error: function (xhr, ajax, throwError) {
-				txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText  + '</pre>');
-				console.log(xhr);
-				console.log(ajax);
-			}
-		});
-	};
-
-	var validateLayerName = function() {
+	var validateLayerName = function () {
 		var layerName = $(this).val();
 
-		if(/\w:\w/.test(layerName.trim()) === false) {
+		if (/\w:\w/.test(layerName.trim()) === false) {
 			lblErrorLayerName.text('Wrong format. Use "workspace:layer".');
 		} else {
 			lblErrorLayerName.text('');
@@ -118,16 +88,17 @@ $(function () {
 
 	};
 
-	var generateRequestURL = function() {
-		var serverURL = txtServerURL.val();
-		var layerName = txtLayerName.val();
-		var reqType = ddlRequestType.val();
-		var operation = $('input[name=request]:checked').val();
-		var outputFormat = ddlOutputFormat.val();
-		var maxFeatures = txtMaxFeatures.val();
+	var generateRequestURL = function () {
+		var serverURL       = txtServerURL.val();
+		var layerName       = txtLayerName.val();
+		var reqType         = ddlRequestType.val();
+		var operation       = $('input[name=request]:checked').val();
+		var outputFormat    = ddlOutputFormat.val();
+		var maxFeatures     = txtMaxFeatures.val();
+		var CQLFilter       = txtCQL.val();
 
 		// Fix output format for request
-		if(outputFormat == "json") {
+		if (outputFormat == "json") {
 			//outputFormat = "&outputFormat=text/javascript&format_options=callback:getJson";
 			outputFormat = "&outputFormat=application/json";
 		} else {
@@ -140,31 +111,74 @@ $(function () {
 		var url = "";
 		switch (reqType) {
 			case "WMS":
-				url = prepareURL(serverURL);
+				url = prepareServerURL(serverURL);
 				break;
 			case "WFS":
 			default:
-				url = prepareURL(serverURL) + layer[0]
-				+ '/ows?service=WFS&version=1.0.0&request='
-				+ operation + '&typeName=' + layerName
-				+ '&maxFeatures=' + maxFeatures + outputFormat;
+				url = prepareServerURL(serverURL);
+				url += layer[0];
+				url += '/ows?service=WFS&version=2.0.0&request=' + operation;
+				url +=  '&typeName=' + layerName;
+				url += '&count=' + maxFeatures;
+				url += outputFormat;
+				url += '&CQL_FILTER=' + encodeURIComponent(CQLFilter);
 		}
 
 		txtRequest.val(url);
 	};
 
-	var updateCodeHighlight = function() {
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
+	var submitRequest = function () {
+		txtResult.html('');
+
+		var outputFormat = ddlOutputFormat.val();
+
+		$.ajax({
+			url: 'proxy.php',
+
+			data: {
+				url: txtRequest.val()
+			},
+
+			type: 'GET',
+			dataType: outputFormat == 'json' ? 'json' : 'text',
+			contentType: outputFormat == 'json' ? 'application/json' : 'text/xml',
+
+			async: true,
+
+			success: function (data) {
+				updateResultBox(data);
+
+				updateCodeHighlight();
+			},
+			error: function (xhr, ajax, throwError) {
+				txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText + '</pre>');
+				console.log(xhr);
+				console.log(ajax);
+			}
 		});
 	};
 
-	var updateResultBox = function(data) {
+	var updateCodeHighlight = function () {
+		$('pre code').each(function (i, block) {
+			if (hljs !== 'undefined') {
+				hljs.highlightBlock(block);
+			}
+		});
+	};
+
+	var updateResultBox = function (data) {
+		var outputFormat = ddlOutputFormat.val();
+
 		var pre = $("<pre>");
-		var code = $("<code>", {class: 'json'});
+		var code = $("<code>", {class: outputFormat});
 		code.appendTo(pre);
 		pre.appendTo(txtResult);
-		code.html(JSON.stringify(data, undefined, 2));
+
+		if (outputFormat == 'json') {
+			code.html(JSON.stringify(data, undefined, 2));
+		} else {
+			code.text(data);
+		}
 	}
 
 

@@ -44,8 +44,9 @@ if (count($parts) < 2) {
 			Header("Content-type: " . urlencode($val), true);
 		}
 	}
-	$url = rtrim($url, " &?=");
+	$url=rtrim($url," &?=");
 
+	set_time_limit(36000);
 
 	echo file_get_contents($url);
 }
