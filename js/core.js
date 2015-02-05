@@ -119,9 +119,14 @@ $(function () {
 				url += layer[0];
 				url += '/ows?service=WFS&version=2.0.0&request=' + operation;
 				url +=  '&typeName=' + layerName;
-				url += '&count=' + maxFeatures;
+
+				if(maxFeatures.length > 0)
+					url += '&count=' + maxFeatures;
+
 				url += outputFormat;
-				url += '&CQL_FILTER=' + encodeURIComponent(CQLFilter);
+
+				if(CQLFilter.length > 0)
+					url += '&CQL_FILTER=' + encodeURIComponent(CQLFilter);
 		}
 
 		txtRequest.val(url);
