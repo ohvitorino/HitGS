@@ -41,6 +41,7 @@ $(function () {
 	// Vars
 
 	var counter = null;
+	var currentWMSLayer = null;
 
 	// Methods
 
@@ -154,11 +155,13 @@ $(function () {
 					serverType: 'geoserver'
 				});
 
-				var wmsLayer = new ol.layer.Image({
+				map.removeLayer(currentWMSLayer);
+
+				currentWMSLayer = new ol.layer.Image({
 					source: wmsSource
 				});
 
-				map.addLayer(wmsLayer);
+				map.addLayer(currentWMSLayer);
 				break;
 			case 'WFS':
 			default:
