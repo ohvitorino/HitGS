@@ -2,8 +2,12 @@
  * Created by brunop on 1/28/2015.
  */
 
+//http://geo1dev.vliz.be/geoserver/dataportal-tests/wms?service=WMS&version=1.1.0&request=GetMap&layers=dataportal-tests:bioobservations&styles=&bbox=3.146897315979,51.0995597839355,4.61533880233765,51.5502967834473&width=1075&height=330&srs=EPSG:4326&format=image%2Fpng
+
 $(function () {
 	"use strict";
+
+	var PROXY = 'proxy.php';
 
 	// DOM Elements
 
@@ -17,6 +21,7 @@ $(function () {
 	var txtCQL = $('#txtCQL');
 	var txtResult = $('#txtResult');
 	var txtMaxFeatures = $('#txtMaxFeatures');
+	var progress = $('.progress');
 
 	if (ol !== 'undefined') {
 		var map = new ol.Map({
@@ -47,29 +52,29 @@ $(function () {
 	};
 
 	var requestServerInformation = function () {
-		var url = txtServerURL.val();
-
-		url = prepareServerURL(url) + 'rest/workspaces.json';
-
-		$.ajax({
-			url: 'proxy.php',
-
-			data: {
-				url: url
-			},
-
-			type: 'GET',
-			dataType: 'json',
-
-			contentType: 'application/json',
-
-			success: function (data) {
-				console.log(data);
-			},
-			error: function (xhr, ajaxOptions, throwError) {
-				console.error(xhr);
-			}
-		});
+		//var url = txtServerURL.val();
+		//
+		//url = prepareServerURL(url) + 'rest/workspaces.json';
+		//
+		//$.ajax({
+		//	url: PROXY,
+		//
+		//	data: {
+		//		url: url
+		//	},
+		//
+		//	type: 'GET',
+		//	dataType: 'json',
+		//
+		//	contentType: 'application/json',
+		//
+		//	success: function (data) {
+		//		console.log(data);
+		//	},
+		//	error: function (xhr, ajaxOptions, throwError) {
+		//		console.error(xhr);
+		//	}
+		//});
 	};
 
 	var handleServerNameInput = function () {
@@ -112,6 +117,8 @@ $(function () {
 		switch (reqType) {
 			case "WMS":
 				url = prepareServerURL(serverURL);
+				url += layer[0];
+				url += '/wms';
 				break;
 			case "WFS":
 			default:
@@ -133,34 +140,63 @@ $(function () {
 	};
 
 	var submitRequest = function () {
+		var reqType         = ddlRequestType.val();
+		var layerName       = txtLayerName.val();
+
 		txtResult.html('');
 
-		var outputFormat = ddlOutputFormat.val();
+		switch (reqType) {
+			case 'WMS':
+				var url = txtRequest.val();
+				var wmsSource = new ol.source.ImageWMS({
+					url: url,
+					params: {'LAYERS': layerName},
+					serverType: 'geoserver'
+				});
 
-		$.ajax({
-			url: 'proxy.php',
+				var wmsLayer = new ol.layer.Image({
+					source: wmsSource
+				});
 
-			data: {
-				url: txtRequest.val()
-			},
+				map.addLayer(wmsLayer);
+				break;
+			case 'WFS':
+			default:
+				var outputFormat = ddlOutputFormat.val();
 
-			type: 'GET',
-			dataType: outputFormat == 'json' ? 'json' : 'text',
-			contentType: outputFormat == 'json' ? 'application/json' : 'text/xml',
+				showLoader();
 
-			async: true,
+				$.ajax({
+					url: PROXY,
 
-			success: function (data) {
-				updateResultBox(data);
+					data: {
+						url: txtRequest.val()
+					},
 
-				updateCodeHighlight();
-			},
-			error: function (xhr, ajax, throwError) {
-				txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText + '</pre>');
-				console.log(xhr);
-				console.log(ajax);
-			}
-		});
+					type: 'GET',
+					dataType: outputFormat == 'json' ? 'json' : 'text',
+					contentType: outputFormat == 'json' ? 'application/json' : 'text/xml',
+
+					async: true,
+
+					success: function (data) {
+						updateResultBox(data);
+
+						updateCodeHighlight();
+
+						hideLoader();
+					},
+					error: function (xhr, ajax, throwError) {
+						txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText + '</pre>');
+						console.log(xhr);
+						console.log(ajax);
+
+						hideLoader();
+					}
+				});
+				break;
+		}
+
 	};
 
 	var updateCodeHighlight = function () {
@@ -184,8 +220,15 @@ $(function () {
 		} else {
 			code.text(data);
 		}
-	}
+	};
 
+	var showLoader = function() {
+		btnSubmit.find('span').toggleClass('spinning');
+	};
+
+	var hideLoader = function() {
+		btnSubmit.find('span').toggleClass('spinning');
+	};
 
 	// Bind events
 	btnSubmit.on('click', submitRequest);
