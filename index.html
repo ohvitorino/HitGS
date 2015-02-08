@@ -62,12 +62,12 @@
 					</select>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" id="wfsgroupOperation">
 					<label>Operation:</label>
 
 					<div class="form-control">
 						<label class="radio-inline">
-							<input type="radio" name="request" value="GetCapabilities"/>&nbsp;GetCapabilities
+							<input type="radio" name="request" value="GetCapabilities" checked="checked"/>&nbsp;GetCapabilities
 						</label>
 						<label class="radio-inline">
 							<input type="radio" name="request" value="GetFeature"/>&nbsp;GetFeature
@@ -83,7 +83,7 @@
 					<textarea name="txtCQL" id="txtCQL" rows="2" class="form-control"></textarea>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" id="wfsgroupOutputFormat">
 					<label for="ddlOutputFormat">Output Format:</label>
 
 					<select name="ddlOutputFormat" id="ddlOutputFormat" class="form-control">
@@ -93,12 +93,12 @@
 
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" id="wfsgroupMaxFeatures">
 					<label for="txtMaxFeatures">Maximum features:</label>
 					<input type="text" id="txtMaxFeatures" class="form-control" value="10"/>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" id="wfsgroupResultType">
 					<label for="cbResultTypeHits">Result Type:</label>
 
 					<div class="form-control">
@@ -124,7 +124,7 @@
 					<input type="text" id="txtRequest" class="form-control"/>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" id="wfsgroupResult">
 					<label for="txtResult">Result:</label>
 
 					<div id="txtResult" class="form-control"></div>

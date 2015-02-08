@@ -225,6 +225,25 @@ $(function () {
 		}
 	};
 
+	var hideWFSControls = function() {
+		var reqType         = ddlRequestType.val();
+		var groups          = $('[id^="wfsgroup"]');
+
+		switch (reqType) {
+			case 'WMS':
+				groups.addClass('hidden');
+				break;
+			case 'WFS':
+			default:
+				groups.removeClass('hidden');
+				break;
+		}
+	};
+
+	var clearResultArea = function() {
+		txtResult.html('');
+	};
+
 	var showLoader = function() {
 		btnSubmit.find('span').toggleClass('spinning');
 	};
@@ -245,10 +264,12 @@ $(function () {
 	txtMaxFeatures.on('change', generateRequestURL);
 	txtCQL.on('change', generateRequestURL);
 	ddlRequestType.on('change', generateRequestURL);
+	ddlRequestType.on('change', hideWFSControls);
 	ddlOutputFormat.on('change', generateRequestURL);
 	$('input[name=request]').on('change', generateRequestURL);
 
 	generateRequestURL();
-	txtResult.html('');
+	hideWFSControls();
+	clearResultArea();
 
 });
