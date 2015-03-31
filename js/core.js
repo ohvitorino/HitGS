@@ -22,6 +22,7 @@ $(function () {
 	var txtResult = $('#txtResult');
 	var txtMaxFeatures = $('#txtMaxFeatures');
 	var progress = $('.progress');
+	var txtViewParams = $('#txtViewParams');
 
 	if (ol !== 'undefined') {
 		var map = new ol.Map({
@@ -44,6 +45,72 @@ $(function () {
 	var currentWMSLayer = null;
 
 	// Methods
+
+	var submitRequest = function () {
+		var reqType         = ddlRequestType.val();
+		var layerName       = txtLayerName.val();
+		var params          = {'LAYERS': layerName};
+
+		params.viewparams = getViewParams();
+
+		clearResults();
+
+		switch (reqType) {
+			case 'WMS':
+				var url = txtRequest.val();
+
+				var wmsSource = new ol.source.ImageWMS({
+					url: url,
+					params: params,
+					serverType: 'geoserver'
+				});
+
+				map.removeLayer(currentWMSLayer);
+
+				currentWMSLayer = new ol.layer.Image({
+					source: wmsSource
+				});
+
+				map.addLayer(currentWMSLayer);
+				break;
+			case 'WFS':
+			default:
+				var outputFormat = ddlOutputFormat.val();
+
+				showLoader();
+
+				$.ajax({
+					url: PROXY,
+
+					data: {
+						url: txtRequest.val()
+					},
+
+					type: 'GET',
+					dataType: outputFormat == 'json' ? 'json' : 'text',
+					contentType: outputFormat == 'json' ? 'application/json' : 'text/xml',
+
+					async: true,
+
+					success: function (data) {
+						updateResultBox(data);
+
+						updateCodeHighlight();
+
+						hideLoader();
+					},
+					error: function (xhr, ajax, throwError) {
+						txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText + '</pre>');
+						console.log(xhr);
+						console.log(ajax);
+
+						hideLoader();
+					}
+				});
+				break;
+		}
+
+	};
 
 	var prepareServerURL = function (url) {
 		if (url.indexOf('/', url.length - 1) == -1) {
@@ -140,68 +207,6 @@ $(function () {
 		txtRequest.val(url);
 	};
 
-	var submitRequest = function () {
-		var reqType         = ddlRequestType.val();
-		var layerName       = txtLayerName.val();
-
-		txtResult.html('');
-
-		switch (reqType) {
-			case 'WMS':
-				var url = txtRequest.val();
-				var wmsSource = new ol.source.ImageWMS({
-					url: url,
-					params: {'LAYERS': layerName},
-					serverType: 'geoserver'
-				});
-
-				map.removeLayer(currentWMSLayer);
-
-				currentWMSLayer = new ol.layer.Image({
-					source: wmsSource
-				});
-
-				map.addLayer(currentWMSLayer);
-				break;
-			case 'WFS':
-			default:
-				var outputFormat = ddlOutputFormat.val();
-
-				showLoader();
-
-				$.ajax({
-					url: PROXY,
-
-					data: {
-						url: txtRequest.val()
-					},
-
-					type: 'GET',
-					dataType: outputFormat == 'json' ? 'json' : 'text',
-					contentType: outputFormat == 'json' ? 'application/json' : 'text/xml',
-
-					async: true,
-
-					success: function (data) {
-						updateResultBox(data);
-
-						updateCodeHighlight();
-
-						hideLoader();
-					},
-					error: function (xhr, ajax, throwError) {
-						txtResult.html('<pre>' + xhr.status + ' : ' + xhr.responseText + '</pre>');
-						console.log(xhr);
-						console.log(ajax);
-
-						hideLoader();
-					}
-				});
-				break;
-		}
-
-	};
-
 	var updateCodeHighlight = function () {
 		$('pre code').each(function (i, block) {
 			if (hljs !== 'undefined') {
@@ -223,6 +228,21 @@ $(function () {
 		} else {
 			code.text(data);
 		}
+	};
+
+	/**
+	 *
+	 */
+	var clearResults = function() {
+		txtResult.html('');
+	};
+
+	/**
+	 *
+	 * @returns {*}
+	 */
+	var getViewParams = function() {
+		return txtViewParams.val();
 	};
 
 	var hideWFSControls = function() {
